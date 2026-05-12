@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Trouble With Taxing Unrealized Capital Gains</title>
+<style>
+  :root {
+    --bg-page: #faf9f5;
+    --bg-card: #f1efe8;
+    --bg-surface: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #5f5e5a;
+    --border: rgba(0, 0, 0, 0.12);
+    --accent-blue: #185FA5;
+    --accent-coral: #993C1D;
+    --accent-green: #2f7a3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-page: #1a1a1a;
+      --bg-card: #2a2a2a;
+      --bg-surface: #1f1f1f;
+      --text-primary: #f0f0ec;
+      --text-secondary: #a8a7a3;
+      --border: rgba(255, 255, 255, 0.15);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .container { max-width: 820px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 500; margin: 0 0 0.5rem; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0 0 2rem; }
+  h2 { font-size: 18px; font-weight: 600; margin: 2rem 0 0.5rem; }
+  h3 { font-size: 15px; font-weight: 600; margin: 1.25rem 0 0.25rem; color: var(--accent-coral); }
+  p { margin: 0.5rem 0; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .kicker {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-blue);
+    margin-bottom: 0.25rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 0.25rem;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+  th { color: var(--text-secondary); font-weight: 500; }
+  tr:last-child td { border-bottom: none; }
+  .neg { color: var(--accent-coral); }
+  .pos { color: var(--accent-green); }
+  ul { padding-left: 1.25rem; }
+  li { margin: 0.25rem 0; }
+  .footnote { color: var(--text-secondary); font-size: 13px; margin-top: 2rem; }
+  .back { display: inline-block; margin-bottom: 1.5rem; color: var(--accent-blue); text-decoration: none; font-size: 14px; }
+  .back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="back" href="../">&larr; All explainers</a>
+
+  <h1>The trouble with taxing unrealized capital gains</h1>
+  <p class="subtitle">A short explainer on why an "annual mark-to-market" wealth tax sounds clean on a slide and gets ugly in practice.</p>
+
+  <div class="card">
+    <span class="kicker">The proposal in one sentence</span>
+    <p>Every year, tax the <em>change in value</em> of an asset — stocks, real estate, a closely held business — even if the owner hasn't sold anything.</p>
+  </div>
+
+  <h2>Why it's appealing</h2>
+  <p>Capital gains are a huge share of the income of the wealthiest households, and under current law, gains are only taxed when an asset is sold ("realized"). Buy-and-hold investors can defer tax indefinitely, and the "step-up in basis" at death can wipe a lifetime of gains off the ledger. Taxing gains as they accrue closes that gap on paper.</p>
+
+  <h2>Why it breaks down in practice</h2>
+
+  <h3>1. Liquidity: you owe cash on paper money</h3>
+  <p>If you own $50M of a private company and it doubles to $100M, an annual mark-to-market tax sends you a bill on the $50M paper gain. There is no buyer. There is no dividend. You either:</p>
+  <ul>
+    <li>Sell shares — which forces dilution, may not be permitted by the cap table, and is often distressed if everyone subject to the tax sells in the same year;</li>
+    <li>Borrow against the position — which works until valuations dip and the loan is called;</li>
+    <li>Force a partial sale of the company — exactly the outcome the founder is least equipped to weather.</li>
+  </ul>
+
+  <h3>2. Valuation: the IRS has to price what no market does</h3>
+  <p>For public stocks, daily prices exist. For everything else — private equity, family businesses, farmland, art, partnership interests, founders' equity in pre-IPO companies — there is no observable price. Either the taxpayer hires an appraiser (recurring, expensive, and disputable) or the IRS adopts formulaic rules that systematically over- or under-tax depending on the asset class. Audit volume explodes; so does litigation.</p>
+
+  <h3>3. Symmetry: refunds on the way down</h3>
+  <p>If gains are taxed annually, losses must be deductible annually, or the system is mathematically a one-way ratchet. In a bad year, the Treasury writes very large checks to the wealthiest households — politically untenable, fiscally lumpy, and pro-cyclical (refunds peak exactly when revenue is already collapsing).</p>
+
+  <h3>4. Realization is a constitutional question</h3>
+  <p>The 16th Amendment authorizes taxes on <em>income</em>. Whether an unrealized gain counts as income has been a live question since <em>Eisner v. Macomber</em> (1920) and was reopened in <em>Moore v. United States</em> (2024). The Supreme Court declined to settle the broader question, so any federal mark-to-market regime faces immediate constitutional challenge before it raises a dollar.</p>
+
+  <h3>5. Behavioral response: the base moves</h3>
+  <p>Founders accelerate liquidity events to pre-fund tax bills. Private companies stay private longer to avoid daily marks. Wealthy households relocate to non-taxing jurisdictions. Capital reallocates toward harder-to-value assets where the tax bites least. None of these are tax-evasion fantasies — they are the standard response to any large new tax wedge on a mobile, lumpy base.</p>
+
+  <h2>Worked example</h2>
+  <div class="card">
+    <p>Founder holds 20% of a private company valued at $500M, basis &asymp; $0.</p>
+    <table>
+      <tr><th>Year</th><th>Co. value</th><th>Founder stake</th><th>Annual gain</th><th>Tax @ 25%</th></tr>
+      <tr><td>0</td><td>$500M</td><td>$100M</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr><td>1</td><td>$800M</td><td>$160M</td><td class="pos">+$60M</td><td class="neg">$15M owed in cash</td></tr>
+      <tr><td>2</td><td>$600M</td><td>$120M</td><td class="neg">&minus;$40M</td><td class="pos">$10M refund?</td></tr>
+      <tr><td>3</td><td>$300M</td><td>$60M</td><td class="neg">&minus;$60M</td><td class="pos">$15M refund?</td></tr>
+    </table>
+    <p class="footnote">The founder paid $15M of real cash in Year 1 against a gain that no longer exists by Year 3. Either Treasury refunds $25M across Years 2&ndash;3 (writing a check to a wealthy household in a downturn) or the loss is suspended, in which case the tax is a forced loan in good years that may never be repaid.</p>
+  </div>
+
+  <h2>The realistic alternatives</h2>
+  <ul>
+    <li><strong>Close step-up in basis at death.</strong> Tax the embedded gain at the transfer event. Same revenue target, no annual valuation, no liquidity squeeze.</li>
+    <li><strong>Tax loans against unrealized assets as constructive realization.</strong> If a household borrows large sums against stock to fund consumption, treat that as a sale of the pledged shares for tax purposes.</li>
+    <li><strong>Mark-to-market only publicly traded securities held by ultra-wealthy households.</strong> Narrow base, observable prices, fewer cliff effects &mdash; still imperfect, but tractable.</li>
+  </ul>
+
+  <p class="footnote">None of this is an argument that the current system is fair. It's an argument that "tax unrealized gains annually, across all asset classes" is the version of the fix with the worst mechanical properties &mdash; and that the cleaner reforms get most of the revenue with a fraction of the breakage.</p>
+
+</div>
+</body>
+</html>

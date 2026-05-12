@@ -1,0 +1,28 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "Explainers"
+theme = "docuapi"
+
+disableKinds = ["taxonomy"]
+
+defaultContentLanguage = "en"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  search = false
+  maxMenuDepth = 1
+  description = "Short web explainers and data analyses."
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+    title = "Explainers"
+    [languages.en.params]
+      toc_footers = [
+        "Source on [GitHub](https://github.com/)",
+      ]

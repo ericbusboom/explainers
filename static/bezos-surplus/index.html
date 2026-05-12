@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bezos Social Utility Calculator</title>
+<style>
+  :root {
+    --bg-page: #faf9f5;
+    --bg-card: #f1efe8;
+    --bg-surface: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #5f5e5a;
+    --border: rgba(0, 0, 0, 0.12);
+    --accent-blue: #185FA5;
+    --accent-coral: #993C1D;
+    --accent-grey: #888888;
+    --accent-green: #2f7a3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-page: #1a1a1a;
+      --bg-card: #2a2a2a;
+      --bg-surface: #1f1f1f;
+      --text-primary: #f0f0ec;
+      --text-secondary: #a8a7a3;
+      --border: rgba(255, 255, 255, 0.15);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+  }
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0 0 2rem;
+  }
+  .sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .slider-row {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.4fr);
+    gap: 20px;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    .slider-row { grid-template-columns: 1fr; gap: 10px; }
+  }
+  .slider-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .slider-label .live-dollar {
+    color: var(--accent-blue);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .slider-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .slider-control input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent-blue);
+  }
+  .slider-value {
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 42px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .slider-desc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .options-row {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  .options-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .stat {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-coral .stat-value { color: var(--accent-coral); }
+  .stat-blue .stat-value { color: var(--accent-blue); }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 3px;
+  }
+  .legend-swatch.dashed-coral { border-top: 2px dashed var(--accent-coral); height: 0; }
+  .legend-swatch.dashed-grey { border-top: 2px dashed var(--accent-grey); height: 0; }
+  .legend-swatch.solid-blue { background: var(--accent-blue); }
+  .legend-swatch.faint-blue { background: rgba(24, 95, 165, 0.35); }
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .chart-wrap.short { height: 280px; }
+  .chart-title {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 1.5rem 0 0.5rem;
+  }
+  .footnote {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+  .footnote a, .methodology a { color: var(--accent-blue); text-decoration: none; }
+  .footnote a:hover, .methodology a:hover { text-decoration: underline; }
+  .methodology {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .methodology h2 {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 1rem;
+  }
+  .methodology h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 1.75rem 0 0.5rem;
+  }
+  .methodology p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    margin: 0 0 1rem;
+  }
+  .methodology ul {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    padding-left: 1.25rem;
+    margin: 0 0 1rem;
+  }
+  .methodology li { margin-bottom: 0.4rem; }
+  .methodology table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 1rem 0 1.5rem;
+  }
+  .methodology th, .methodology td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .methodology th {
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+  }
+  .methodology td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .methodology .formula {
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    margin: 0.5rem 0 1rem;
+    color: var(--text-primary);
+  }
+  .methodology .caveat {
+    background: var(--bg-card);
+    border-left: 3px solid var(--accent-coral);
+    padding: 12px 14px;
+    margin: 1rem 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Jeff Bezos: social utility vs. net worth</h1>
+  <p class="subtitle">An interactive estimate. Adjust the assumptions and see how Bezos's wealth compares to the social surplus Amazon generates. All figures FY2025 unless noted.</p>
+
+  <div class="sliders">
+
+    <div class="slider-row">
+      <div>
+        <div class="slider-label">
+          <span>AWS surplus %</span>
+          <span class="live-dollar" id="aws-dollar">$15B</span>
+        </div>
+        <div class="slider-control">
+          <input type="range" min="0" max="25" step="1" value="12" id="aws-pct" />
+          <span id="aws-pct-out" class="slider-value">12%</span>
+        </div>
+      </div>
+      <div class="slider-desc">
+        Differential vs. Azure / GCP / on-prem. B2B; surplus accrues to other firms' margins. Applied to AWS revenue $128.7B.
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <div>
+        <div class="slider-label">
+          <span>Retail / ads / Prime surplus %</span>
+          <span class="live-dollar" id="retail-dollar">$62B</span>
+        </div>
+        <div class="slider-control">
+          <input type="range" min="0" max="25" step="1" value="15" id="retail-pct" />
+          <span id="retail-pct-out" class="slider-value">15%</span>
+        </div>
+      </div>
+      <div class="slider-desc">
+        Differential vs. Walmart / Target / Best Buy / Costco. Applied to non-AWS revenue, with 3P services revenue subtracted by default to avoid double-counting against the GMV slider below.
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <div>
+        <div class="slider-label">
+          <span>3P seller GMV surplus %</span>
+          <span class="live-dollar" id="gmv-dollar">$115B</span>
+        </div>
+        <div class="slider-control">
+          <input type="range" min="0" max="30" step="1" value="20" id="gmv-pct" />
+          <span id="gmv-pct-out" class="slider-value">20%</span>
+        </div>
+      </div>
+      <div class="slider-desc">
+        Surplus from third-party seller transactions. Many wouldn't happen at all without Amazon's marketplace. Applied to 3P GMV $575B (FY2025, Marketplace Pulse).
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <div>
+        <div class="slider-label">
+          <span>Tax flow surplus %</span>
+          <span class="live-dollar" id="tax-dollar">$7B</span>
+        </div>
+        <div class="slider-control">
+          <input type="range" min="0" max="25" step="1" value="15" id="tax-pct" />
+          <span id="tax-pct-out" class="slider-value">15%</span>
+        </div>
+      </div>
+      <div class="slider-desc">
+        Counterfactual share of $19.1B GAAP corp tax + ~$25B payroll-related taxes. Conceptually weak (tax revenue is a transfer, not value creation) but kept for completeness.
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <div>
+        <div class="slider-label">
+          <span>Transferred-not-created discount %</span>
+          <span class="live-dollar" id="discount-dollar">−$30B</span>
+        </div>
+        <div class="slider-control">
+          <input type="range" min="0" max="40" step="1" value="15" id="discount-pct" />
+          <span id="discount-pct-out" class="slider-value">15%</span>
+        </div>
+      </div>
+      <div class="slider-desc">
+        Discount on the headline for the share of "surplus" that's actually transferred from someone else (workers via monopsony, competitors via predatory pricing, public fisc via avoidance) rather than newly created.
+      </div>
+    </div>
+
+    <div class="slider-row">
+      <div>
+        <div class="slider-label">
+          <span>Years to project forward</span>
+          <span class="live-dollar" id="years-dollar"></span>
+        </div>
+        <div class="slider-control">
+          <input type="range" min="1" max="30" step="1" value="10" id="years" />
+          <span id="years-out" class="slider-value">10</span>
+        </div>
+      </div>
+      <div class="slider-desc">
+        Forward projection horizon. Future-year revenue grows at a rate that decays from 10% (year 1) toward 4% (year 20+). Historical years 1996–2025 use Amazon's actual reported revenue.
+      </div>
+    </div>
+
+    <div class="options-row">
+      <label>
+        <input type="checkbox" id="subtract-3p" checked />
+        Subtract 3P services revenue ($172B) from the retail base, to avoid double-counting against the GMV slider.
+      </label>
+    </div>
+
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Gross annual surplus</div>
+      <div id="gross-out" class="stat-value">$199B</div>
+    </div>
+    <div class="stat stat-coral">
+      <div class="stat-label">Discount</div>
+      <div id="discount-out" class="stat-value">−$30B</div>
+    </div>
+    <div class="stat stat-blue">
+      <div class="stat-label">Net annual surplus</div>
+      <div id="annual-out" class="stat-value">$170B</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Cumulative (history + projected)</div>
+      <div id="cumulative-out" class="stat-value">$3.86T</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Bezos net worth</div>
+      <div class="stat-value">$240B</div>
+    </div>
+    <div class="stat stat-coral">
+      <div class="stat-label">Capture share</div>
+      <div id="capture-out" class="stat-value">6.2%</div>
+    </div>
+  </div>
+
+  <div class="chart-title">Historical (1996–2025) + projected cumulative surplus</div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch faint-blue"></span>Annual surplus (year-by-year)</span>
+    <span class="legend-item"><span class="legend-swatch solid-blue"></span>Cumulative surplus</span>
+    <span class="legend-item"><span class="legend-swatch dashed-coral"></span>Bezos net worth ($240B)</span>
+    <span class="legend-item"><span class="legend-swatch dashed-grey"></span>Amazon market cap ($2.93T)</span>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="surplus-chart" role="img" aria-label="Historical and projected cumulative social surplus."></canvas>
+  </div>
+
+  <div class="chart-title">Founder capture: net worth as % of company market cap (May 2026)</div>
+  <div class="chart-wrap short">
+    <canvas id="founder-chart" role="img" aria-label="Bar chart comparing founders' net worth as a percentage of their company's market capitalization."></canvas>
+  </div>
+
+  <div class="chart-title">Monte Carlo: distribution of capture share over slider ranges (5,000 samples)</div>
+  <div class="chart-wrap short">
+    <canvas id="mc-chart" role="img" aria-label="Histogram of Bezos capture share under random sampling of slider values."></canvas>
+  </div>
+
+  <p class="footnote">
+    Inputs: Amazon revenue $716.9B (<a href="https://www.sec.gov/Archives/edgar/data/1018724/000101872426000002/amzn-20251231xex991.htm" target="_blank" rel="noopener">FY2025 10-K</a>); AWS $128.7B; 3P GMV $575B (<a href="https://www.marketplacepulse.com/articles/amazon-gmv-surpassed-800-billion-in-2025" target="_blank" rel="noopener">Marketplace Pulse</a>); 3P services revenue $172.2B; corporate tax provision $19.1B GAAP, $8.3B cash (<a href="https://www.macrotrends.net/stocks/charts/AMZN/amazon/total-provision-income-taxes" target="_blank" rel="noopener">Macrotrends</a>); payroll-related taxes ~$25B est. Bezos net worth $240B midpoint (Forbes 2026 $224B, Bloomberg $240–266B). Amazon market cap $2.93T (<a href="https://companiesmarketcap.com/amazon/marketcap/" target="_blank" rel="noopener">May 2026</a>). Bezos Amazon ownership ~8.2%.
+  </p>
+
+  <section class="methodology">
+    <h2>Methodology</h2>
+
+    <p>
+      The question this calculator tries to answer: how much social value has Jeff Bezos created, and how does that compare to the wealth he has personally captured? The framing rests on a counterfactual — what if Bezos had never existed, and Amazon had never been built?
+    </p>
+
+    <h3>The counterfactual assumption</h3>
+    <p>
+      The model assumes that without Bezos, the markets Amazon serves would still be served — but by competitors who are some percentage worse on the relevant dimensions (price, selection, logistics speed, reliability, search quality). The sliders let you specify how much worse, separately for AWS, retail, and the 3P marketplace.
+    </p>
+
+    <h3>The four input streams</h3>
+
+    <p><strong>1. AWS ($128.7B, FY2025).</strong> Cloud infrastructure. The counterfactual is Microsoft Azure, Google Cloud, Oracle Cloud, or self-hosting. Real alternatives exist and are credible at scale, so the surplus differential is moderate. Note this is B2B: AWS surplus accrues to other firms' margins, not directly to consumers.</p>
+
+    <p><strong>2. Retail / ads / Prime ($416B, FY2025 ex-AWS ex-3P-services).</strong> First-party retail, advertising, Prime subscriptions. The counterfactual is Walmart, Target, Best Buy, Costco, and the rest of the retail/media stack. Default differential 15%. If you uncheck the "subtract 3P services" option, this stream is applied to the full $588B non-AWS revenue, which double-counts against the GMV slider below.</p>
+
+    <p><strong>3. Third-party seller GMV (~$575B, FY2025).</strong> Gross merchandise volume flowing through Amazon's marketplace from independent sellers. <em>Not</em> included in Amazon's reported revenue (Amazon only counts its commission/FBA fees, $172.2B in FY2025). For most small 3P sellers, the realistic counterfactual is not "sell on Walmart Marketplace" — it's "don't sell at all," "sell on Etsy at a fraction of the volume," or "build a Shopify site at much higher customer-acquisition cost." This justifies a higher surplus percentage (default 20%).</p>
+
+    <p><strong>4. Tax flows (~$44B/year).</strong> Corporate income tax provision ($19.1B GAAP for FY2025; cash taxes paid only $8.3B due to <a href="https://www.pymnts.com/amazon/2026/amazon-leverages-new-tax-laws-to-fuel-ai-buildout/" target="_blank" rel="noopener">2025 Tax Act</a> accelerated depreciation) plus ~$25B in employer- and employee-side payroll-related taxes generated by Amazon wages.</p>
+
+    <p class="caveat" style="margin-top:0.5rem;">
+      <strong>Caveat on the tax stream.</strong> Tax revenue is a transfer, not value creation, so this stream is conceptually weaker than the others. It is also vulnerable to the counterfactual that Amazon-counterfactual workers would mostly hold other jobs paying similar taxes. Treat as a small adjustment, not a major contribution. The default 15% slider position is already heavily discounted; you can drive it to 0 if you find the framing unconvincing.
+    </p>
+
+    <h3>The transferred-not-created discount</h3>
+    <p>
+      Some fraction of any "surplus" measured this way is actually transferred from someone else rather than newly created. Specifically: monopsony power suppressing wages, predatory pricing damaging competitors, tax-avoidance reducing public revenue, and use of unpriced externalities (warehouse-worker injuries, road wear from delivery vans). The discount slider applies a haircut to the headline — a defensible default is 10–20%.
+    </p>
+
+    <h3>The formula</h3>
+    <div class="formula">
+      gross annual = (AWS × a%) + (retail_base × r%) + (GMV × g%) + (tax × t%)<br>
+      where retail_base = ($716.9B − $128.7B) − ($172.2B if "subtract 3P" else 0)
+    </div>
+    <div class="formula">
+      net annual = gross annual × (1 − discount%)
+    </div>
+    <div class="formula">
+      cumulative = Σ historical_years (net annual × revenue_year / $716.9B)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Σ projected_years (net annual × growth_factor_year)
+    </div>
+    <div class="formula">
+      capture share = Bezos net worth ÷ cumulative
+    </div>
+
+    <h3>The numbers at default settings</h3>
+    <table>
+      <thead>
+        <tr><th>Input stream</th><th>Volume</th><th>Multiplier</th><th class="num">Annual surplus</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>AWS</td><td>$128.7B</td><td>12%</td><td class="num">$15.4B</td></tr>
+        <tr><td>Retail / ads / Prime (ex 3P)</td><td>$416.0B</td><td>15%</td><td class="num">$62.4B</td></tr>
+        <tr><td>3P seller GMV</td><td>$575.0B</td><td>20%</td><td class="num">$115.0B</td></tr>
+        <tr><td>Tax flows</td><td>$44.1B</td><td>15%</td><td class="num">$6.6B</td></tr>
+        <tr><td><strong>Gross annual</strong></td><td></td><td></td><td class="num"><strong>~$199.5B</strong></td></tr>
+        <tr><td>Transferred-not-created discount</td><td></td><td>15%</td><td class="num">−$29.9B</td></tr>
+        <tr><td><strong>Net annual</strong></td><td></td><td></td><td class="num"><strong>~$169.5B</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Reframing "capture share"</h3>
+    <p>
+      The original metric — Bezos's net worth divided by cumulative surplus — compares a stock (his current wealth, the present value of his Amazon claim plus diversified holdings) to an arbitrary flow integrated over a chosen horizon. The denominator scales with the years slider, so the headline "capture share" is partly an artifact of how many years you choose.
+    </p>
+    <p>
+      A more grounded version: compare each founder's personal wealth to their company's total market capitalization. Market cap is the market's PV estimate of all future profits — a better proxy for "total value created" than a hand-rolled cumulative-surplus figure. The founder-comparator chart above shows this. By that measure: Bezos at 8% of Amazon market cap, Gates at 3% of Microsoft (heavy giving), Zuckerberg at 13% of Meta, Page+Brin at 14% of Alphabet, and the Walton family aggregate at 47% of Walmart (multi-generational concentrated ownership).
+    </p>
+    <p>
+      Bezos sits low in this peer group. The reason isn't that he created more value relative to his stake — it's that Amazon scaled so much that even an 8% slice is a $240B figure. The same scaling explains Gates: Microsoft is now worth ~$3.2T, but Gates has given away most of his stake.
+    </p>
+
+    <h3>What this is and isn't</h3>
+    <p>This is a back-of-envelope sensitivity tool, not an economic study. The methodology has known weaknesses worth stating:</p>
+
+    <div class="caveat">
+      <strong>Revenue is not consumer surplus.</strong> Strictly, surplus is the gap between willingness-to-pay and price paid. The model uses revenue × differential as a proxy. Defensible but not rigorous welfare economics — a real estimate would need price-elasticity data and willingness-to-pay distributions.
+    </div>
+
+    <div class="caveat">
+      <strong>Time scaling is approximate.</strong> The historical line uses Amazon's actual revenue 1996–2025, scaled by the current surplus rate. This implicitly assumes the surplus differential held constant over Amazon's life — likely false (early Amazon had a much smaller cost/price advantage; AWS didn't exist before 2006). Forward years use a decaying-growth model, which is one defensible assumption among many.
+    </div>
+
+    <div class="caveat">
+      <strong>Comparing one shareholder's wealth to total marketplace surplus is mismatched scope.</strong> Amazon's surplus, to the extent it exists, was captured by Amazon shareholders <em>collectively</em>. Bezos owns ~8.2%; the rest is held by other public shareholders (and partly by employees through equity comp). The Monte Carlo chart and founder comparator try to put this in perspective.
+    </div>
+
+    <div class="caveat">
+      <strong>The transferred-not-created discount is genuinely contested.</strong> The default 15% is a guess. A pro-monopoly view would put it near 0; a labor-economist view focused on warehouse monopsony might put it at 30–40%. Move the slider and watch the headline.
+    </div>
+
+    <h3>Sources</h3>
+    <ul>
+      <li>Amazon revenue, segment breakdown: <a href="https://www.sec.gov/Archives/edgar/data/1018724/000101872426000002/amzn-20251231xex991.htm" target="_blank" rel="noopener">Amazon Q4/FY2025 results (SEC)</a>.</li>
+      <li>Amazon income tax provision: <a href="https://www.macrotrends.net/stocks/charts/AMZN/amazon/total-provision-income-taxes" target="_blank" rel="noopener">Macrotrends</a>; <a href="https://www.pymnts.com/amazon/2026/amazon-leverages-new-tax-laws-to-fuel-ai-buildout/" target="_blank" rel="noopener">PYMNTS on the 2025 Tax Act</a>.</li>
+      <li>Third-party GMV: <a href="https://www.marketplacepulse.com/articles/amazon-gmv-surpassed-800-billion-in-2025" target="_blank" rel="noopener">Marketplace Pulse, "Amazon GMV Surpassed $800B in 2025"</a> (1P + 3P combined). 3P portion ~$575B.</li>
+      <li>Bezos net worth: <a href="https://www.bloomberg.com/billionaires/profiles/jeffrey-p-bezos/" target="_blank" rel="noopener">Bloomberg Billionaires Index</a>; Forbes 2026 list ~$224B; midpoint $240B used.</li>
+      <li>Comparator founders / market caps: <a href="https://companiesmarketcap.com/" target="_blank" rel="noopener">companiesmarketcap.com</a>; Bloomberg Billionaires Index; 24/7 Wall St. on Walton family ($475B aggregate).</li>
+      <li>Historical Amazon revenue series: 10-K filings, compiled via Macrotrends.</li>
+    </ul>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function() {
+  // ----- DATA -----
+  const AWS_REV = 128.7;
+  const TOTAL_REV = 716.9;
+  const THIRDP_SERVICES_REV = 172.2;
+  const NON_AWS_REV = TOTAL_REV - AWS_REV;            // 588.2
+  const RETAIL_EX_3P = NON_AWS_REV - THIRDP_SERVICES_REV; // 416.0
+  const THIRDP_GMV = 575;
+  const TAX_FLOWS = 44.1;
+  const NET_WORTH = 240;
+  const AMAZON_MCAP = 2930;
+
+  // Amazon historical revenue (USD billions)
+  const HISTORY = [
+    [1996, 0.0157], [1997, 0.1478], [1998, 0.6098], [1999, 1.640],
+    [2000, 2.762], [2001, 3.122], [2002, 3.933], [2003, 5.264],
+    [2004, 6.921], [2005, 8.490], [2006, 10.711], [2007, 14.835],
+    [2008, 19.166], [2009, 24.509], [2010, 34.204], [2011, 48.077],
+    [2012, 61.093], [2013, 74.452], [2014, 88.988], [2015, 107.006],
+    [2016, 135.987], [2017, 177.866], [2018, 232.887], [2019, 280.522],
+    [2020, 386.064], [2021, 469.822], [2022, 513.983], [2023, 574.785],
+    [2024, 637.959], [2025, 716.900]
+  ];
+
+  // Founder comparators (May 2026 approx)
+  const COMPARATORS = [
+    { label: "Bezos / Amazon",       nw: 240, mcap: 2930 },
+    { label: "Waltons / Walmart",    nw: 475, mcap: 1000 },
+    { label: "Gates / Microsoft",    nw: 104, mcap: 3200 },
+    { label: "Zuckerberg / Meta",    nw: 217, mcap: 1700 },
+    { label: "Page+Brin / Alphabet", nw: 582, mcap: 4200 }
+  ];
+
+  // ----- DOM -----
+  const els = {
+    aws:      document.getElementById('aws-pct'),
+    retail:   document.getElementById('retail-pct'),
+    gmv:      document.getElementById('gmv-pct'),
+    tax:      document.getElementById('tax-pct'),
+    discount: document.getElementById('discount-pct'),
+    years:    document.getElementById('years'),
+    subtract: document.getElementById('subtract-3p')
+  };
+  const out = {
+    awsPct:      document.getElementById('aws-pct-out'),
+    retailPct:   document.getElementById('retail-pct-out'),
+    gmvPct:      document.getElementById('gmv-pct-out'),
+    taxPct:      document.getElementById('tax-pct-out'),
+    discountPct: document.getElementById('discount-pct-out'),
+    yearsOut:    document.getElementById('years-out'),
+
+    awsDollar:      document.getElementById('aws-dollar'),
+    retailDollar:   document.getElementById('retail-dollar'),
+    gmvDollar:      document.getElementById('gmv-dollar'),
+    taxDollar:      document.getElementById('tax-dollar'),
+    discountDollar: document.getElementById('discount-dollar'),
+
+    gross:      document.getElementById('gross-out'),
+    discount:   document.getElementById('discount-out'),
+    annual:     document.getElementById('annual-out'),
+    cumulative: document.getElementById('cumulative-out'),
+    capture:    document.getElementById('capture-out')
+  };
+
+  // ----- HELPERS -----
+  function fmt(n) {
+    const abs = Math.abs(n);
+    if (abs >= 1000) return '$' + (n / 1000).toFixed(2) + 'T';
+    return '$' + Math.round(n) + 'B';
+  }
+  function pct(x) { return parseFloat(x) / 100; }
+  function getColor(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+  function tickColor() { return getColor('--text-secondary') || '#5f5e5a'; }
+
+  // ----- CORE MATH -----
+  function computeGross(s) {
+    const retailBase = s.subtract ? RETAIL_EX_3P : NON_AWS_REV;
+    const aws    = AWS_REV     * s.aws;
+    const retail = retailBase  * s.retail;
+    const gmv    = THIRDP_GMV  * s.gmv;
+    const tax    = TAX_FLOWS   * s.tax;
+    return { aws, retail, gmv, tax, gross: aws + retail + gmv + tax };
+  }
+  function readSliders() {
+    return {
+      aws:      pct(els.aws.value),
+      retail:   pct(els.retail.value),
+      gmv:      pct(els.gmv.value),
+      tax:      pct(els.tax.value),
+      discount: pct(els.discount.value),
+      years:    parseInt(els.years.value, 10),
+      subtract: els.subtract.checked
+    };
+  }
+
+  function buildSeries(annualNet, years) {
+    const series = [];
+    const refRev = TOTAL_REV;
+    for (const [year, rev] of HISTORY) {
+      series.push({ year, annual: annualNet * rev / refRev });
+    }
+    let lastRev = TOTAL_REV;
+    for (let i = 1; i <= years; i++) {
+      const t = Math.min(i, 20) / 20;
+      const g = 0.10 - (0.10 - 0.04) * t;
+      lastRev = lastRev * (1 + g);
+      series.push({ year: 2025 + i, annual: annualNet * lastRev / refRev });
+    }
+    let cum = 0;
+    for (const row of series) {
+      cum += row.annual;
+      row.cumulative = cum;
+    }
+    return series;
+  }
+
+  // ----- CHARTS -----
+  let surplusChart, founderChart, mcChart;
+
+  function renderSurplusChart(series) {
+    const ctx = document.getElementById('surplus-chart').getContext('2d');
+    if (surplusChart) surplusChart.destroy();
+    const labels = series.map(r => r.year);
+    const annual = series.map(r => r.annual);
+    const cumulative = series.map(r => r.cumulative);
+    const lastCum = cumulative[cumulative.length - 1];
+    const yMax = Math.max(lastCum, AMAZON_MCAP) * 1.05;
+
+    surplusChart = new Chart(ctx, {
+      data: {
+        labels,
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Annual surplus',
+            data: annual,
+            backgroundColor: 'rgba(24, 95, 165, 0.30)',
+            borderColor: 'rgba(24, 95, 165, 0.30)',
+            borderWidth: 0,
+            order: 2
+          },
+          {
+            type: 'line',
+            label: 'Cumulative surplus',
+            data: cumulative,
+            borderColor: '#185FA5',
+            backgroundColor: 'rgba(24, 95, 165, 0.05)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.05,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            order: 1
+          },
+          {
+            type: 'line',
+            label: 'Bezos net worth',
+            data: new Array(series.length).fill(NET_WORTH),
+            borderColor: '#993C1D',
+            borderWidth: 2,
+            borderDash: [6, 4],
+            pointRadius: 0
+          },
+          {
+            type: 'line',
+            label: 'Amazon market cap',
+            data: new Array(series.length).fill(AMAZON_MCAP),
+            borderColor: '#888',
+            borderWidth: 1.5,
+            borderDash: [3, 4],
+            pointRadius: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: c => c.dataset.label + ': ' + fmt(c.parsed.y)
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: yMax,
+            ticks: {
+              color: tickColor(),
+              callback: v => v >= 1000 ? '$' + (v/1000).toFixed(1) + 'T' : '$' + v + 'B'
+            },
+            grid: { color: 'rgba(128,128,128,0.15)' },
+            title: { display: true, text: 'USD (billions)', color: tickColor() }
+          },
+          x: {
+            ticks: {
+              color: tickColor(),
+              maxRotation: 0,
+              autoSkip: true,
+              callback: function(_v, i) {
+                const yr = labels[i];
+                return (yr % 5 === 0 || i === 0 || i === labels.length - 1) ? yr : '';
+              }
+            },
+            grid: { color: 'rgba(128,128,128,0.10)' }
+          }
+        }
+      }
+    });
+  }
+
+  function renderFounderChart() {
+    const ctx = document.getElementById('founder-chart').getContext('2d');
+    if (founderChart) founderChart.destroy();
+    const data = COMPARATORS.map(c => +(100 * c.nw / c.mcap).toFixed(1));
+    const colors = COMPARATORS.map(c => c.label.startsWith('Bezos') ? '#185FA5' : '#888');
+    founderChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: COMPARATORS.map(c => c.label),
+        datasets: [{
+          label: 'Net worth as % of company market cap',
+          data,
+          backgroundColor: colors
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: c => {
+                const r = COMPARATORS[c.dataIndex];
+                const mcStr = r.mcap >= 1000 ? '$' + (r.mcap/1000).toFixed(1) + 'T' : '$' + r.mcap + 'B';
+                return c.parsed.x.toFixed(1) + '%  ($' + r.nw + 'B / ' + mcStr + ')';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: { color: tickColor(), callback: v => v + '%' },
+            grid: { color: 'rgba(128,128,128,0.15)' },
+            title: { display: true, text: 'Capture (founder NW / company market cap)', color: tickColor() }
+          },
+          y: {
+            ticks: { color: tickColor() },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  function runMonteCarlo(years, subtract) {
+    const N = 5000;
+    const captures = [];
+    for (let i = 0; i < N; i++) {
+      const a = Math.random() * 0.25;
+      const r = Math.random() * 0.25;
+      const g = Math.random() * 0.30;
+      const t = Math.random() * 0.25;
+      const d = Math.random() * 0.40;
+      const retailBase = subtract ? RETAIL_EX_3P : NON_AWS_REV;
+      const gross = AWS_REV*a + retailBase*r + THIRDP_GMV*g + TAX_FLOWS*t;
+      const net = gross * (1 - d);
+      let cum = 0;
+      const refRev = TOTAL_REV;
+      for (const [, rev] of HISTORY) cum += net * rev / refRev;
+      let lastRev = TOTAL_REV;
+      for (let yr = 1; yr <= years; yr++) {
+        const tt = Math.min(yr, 20) / 20;
+        const grRate = 0.10 - (0.10 - 0.04) * tt;
+        lastRev = lastRev * (1 + grRate);
+        cum += net * lastRev / refRev;
+      }
+      const cap = cum > 0 ? (NET_WORTH / cum * 100) : 100;
+      captures.push(Math.min(cap, 100));
+    }
+    captures.sort((a, b) => a - b);
+    return captures;
+  }
+
+  function renderMcChart(captures) {
+    const ctx = document.getElementById('mc-chart').getContext('2d');
+    if (mcChart) mcChart.destroy();
+    const p99 = captures[Math.floor(captures.length * 0.99)] || 30;
+    const maxBin = Math.min(50, Math.max(5, Math.ceil(p99)));
+    const nBins = 30;
+    const binSize = maxBin / nBins;
+    const bins = new Array(nBins).fill(0);
+    for (const c of captures) {
+      const idx = Math.min(nBins - 1, Math.floor(c / binSize));
+      bins[idx]++;
+    }
+    const labels = bins.map((_, i) => (i * binSize).toFixed(1) + '%');
+    const p10 = captures[Math.floor(captures.length * 0.10)];
+    const p50 = captures[Math.floor(captures.length * 0.50)];
+    const p90 = captures[Math.floor(captures.length * 0.90)];
+    const colors = bins.map((_, i) => {
+      const v = i * binSize;
+      return (v >= p10 && v <= p90) ? 'rgba(24, 95, 165, 0.7)' : 'rgba(24, 95, 165, 0.25)';
+    });
+
+    mcChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{ label: 'count', data: bins, backgroundColor: colors, borderWidth: 0 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: items => 'capture share: ' + items[0].label,
+              label: c => c.parsed.y + ' samples'
+            }
+          },
+          subtitle: {
+            display: true,
+            text: 'P10 = ' + p10.toFixed(1) + '%   |   P50 = ' + p50.toFixed(1) +
+                  '%   |   P90 = ' + p90.toFixed(1) + '%   (shaded = inter-decile range)',
+            color: tickColor(),
+            font: { size: 12 },
+            padding: { bottom: 10 }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: tickColor(),
+              autoSkip: true,
+              maxRotation: 0,
+              callback: function(_v, i) { return i % 3 === 0 ? labels[i] : ''; }
+            },
+            grid: { display: false },
+            title: { display: true, text: 'Capture share (%)', color: tickColor() }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: tickColor() },
+            grid: { color: 'rgba(128,128,128,0.10)' },
+            title: { display: true, text: 'Sample count', color: tickColor() }
+          }
+        }
+      }
+    });
+  }
+
+  // ----- UPDATE -----
+  function update() {
+    const s = readSliders();
+    const parts = computeGross(s);
+    const gross = parts.gross;
+    const discountAmt = gross * s.discount;
+    const net = gross - discountAmt;
+
+    out.awsPct.textContent      = els.aws.value + '%';
+    out.retailPct.textContent   = els.retail.value + '%';
+    out.gmvPct.textContent      = els.gmv.value + '%';
+    out.taxPct.textContent      = els.tax.value + '%';
+    out.discountPct.textContent = els.discount.value + '%';
+    out.yearsOut.textContent    = els.years.value;
+
+    out.awsDollar.textContent      = fmt(parts.aws);
+    out.retailDollar.textContent   = fmt(parts.retail);
+    out.gmvDollar.textContent      = fmt(parts.gmv);
+    out.taxDollar.textContent      = fmt(parts.tax);
+    out.discountDollar.textContent = '−' + fmt(discountAmt);
+
+    out.gross.textContent      = fmt(gross);
+    out.discount.textContent   = '−' + fmt(discountAmt);
+    out.annual.textContent     = fmt(net);
+
+    const series = buildSeries(net, s.years);
+    const cum = series[series.length - 1].cumulative;
+    out.cumulative.textContent = fmt(cum);
+    const cap = cum > 0 ? (NET_WORTH / cum * 100) : 0;
+    out.capture.textContent = cap.toFixed(1) + '%';
+
+    renderSurplusChart(series);
+
+    const mc = runMonteCarlo(s.years, s.subtract);
+    renderMcChart(mc);
+  }
+
+  Object.values(els).forEach(el => {
+    if (!el) return;
+    const evt = (el.type === 'checkbox') ? 'change' : 'input';
+    el.addEventListener(evt, update);
+  });
+
+  renderFounderChart();
+  update();
+})();
+</script>
+</body>
+</html>

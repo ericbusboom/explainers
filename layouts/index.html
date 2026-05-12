@@ -1,0 +1,28 @@
+{{ define "main" }}
+  <div class="home-intro">
+    <h1>{{ .Site.Title }}</h1>
+    <p>{{ .Site.Params.description }}</p>
+  </div>
+
+  <div class="explainer-list">
+    {{ range (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
+      {{ $href := cond (ne (.Params.externalLink | default "") "") (urls.JoinPath site.BaseURL .Params.externalLink "/") .RelPermalink }}
+      <a class="explainer-card" href="{{ $href }}">
+        <h2>{{ .Title }}</h2>
+        <div class="meta">{{ .Date.Format "January 2, 2006" }}</div>
+        <p>{{ .Params.summary | default .Summary }}</p>
+      </a>
+    {{ end }}
+  </div>
+{{ end }}
+
+{{ define "toc" }}
+  <ul id="toc" class="toc-list-h1">
+    {{ range (where .Site.RegularPages "Section" "posts").ByDate.Reverse }}
+      {{ $href := cond (ne (.Params.externalLink | default "") "") (urls.JoinPath site.BaseURL .Params.externalLink "/") .RelPermalink }}
+      <li>
+        <a class="toc-link" href="{{ $href }}">{{ .Title }}</a>
+      </li>
+    {{ end }}
+  </ul>
+{{ end }}
