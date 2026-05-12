@@ -1,28 +1,36 @@
 baseURL = "/"
 languageCode = "en-us"
 title = "Explainers"
-theme = "docuapi"
+theme = "beautifulhugo"
 
-disableKinds = ["taxonomy"]
+DefaultContentLanguage = "en"
 
-defaultContentLanguage = "en"
+[pagination]
+  pagerSize = 10
 
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
+[Params]
+  subtitle = "Short web explainers and back-of-envelope analyses."
+  mainSections = ["posts"]
+  dateFormat = ":date_long"
+  rss = true
+  readingTime = false
+  wordCount = false
+  colorScheme = "auto"
+  socialShare = false
+  delayDisqus = true
+  showRelatedPosts = false
+  headerImgStyle = "narrow"
 
-[params]
-  search = false
-  maxMenuDepth = 1
-  description = "Short web explainers and data analyses."
+[markup.highlight]
+  noClasses = false
 
-[languages]
-  [languages.en]
-    languageName = "English"
-    weight = 1
-    title = "Explainers"
-    [languages.en.params]
-      toc_footers = [
-        "Source on [GitHub](https://github.com/)",
-      ]
+[markup.goldmark.parser.attribute]
+  block = true
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 1

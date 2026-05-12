@@ -1,0 +1,122 @@
+# Content
+- id: dateFormat
+  translation: ":date_long"
+- id: shortdateFormat
+  translation: ":date_medium"
+- id: postedOnDate
+  translation: "Opublikowany {{ . }}"
+- id: lastModified
+  translation: "Ostatnia modyfikacja {{ . }}"
+- id: translationsLabel
+  translation: "Inne języki: "
+- id: translationsSeparator
+  translation: ", "
+- id: readMore
+  translation: "Więcej"
+- id: olderPosts
+  translation: "Poprzednie wpisy"
+- id: newerPosts
+  translation: "Następne wpisy"
+- id: previousPost
+  translation: "Poprzedni"
+- id: nextPost
+  translation: "Następny"
+- id: readTime
+  translation: "minuty"
+- id: words
+  translation: "słowa"
+- id: readingTime
+  translation: ""
+
+# 404 page
+- id: pageNotFound
+  translation: "Nieprawidłowy adres (błąd 404)"
+
+# Footer
+- id: poweredBy # Accepts HTML
+  translation: '<a href="https://gohugo.io">Hugo v{{ .Version }}</a> napędzany &nbsp;&bull;&nbsp; Motyw <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> przystosowany od <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>'
+
+# Navigation
+- id: toggleNavigation
+  translation: "Nawigacja"
+- id: languageSwitcherLabel
+  translation: "Język"
+- id: gcseLabelShort
+  translation: "Szukaj"
+- id: gcseLabelLong
+  translation: "Szukaj {{ .Site.Title }}"
+- id: gcseClose
+  translation: "Zamknij"
+
+# Staticman
+- id: noComment
+  translation: "Bez komentarza"
+- id: oneComment
+  translation: "komentarz"
+- id: moreComment
+  translation: "komentarzy"
+- id: useMarkdown
+  translation: "Możesz użyć składni Markdown"
+- id: yourName
+  translation: "Twoje imię"
+- id: yourEmail
+  translation: "Twój adres email"
+- id: yourWebsite
+  translation: "Twoja strona internetowa"
+- id: submit
+  translation: "Wyślij"
+- id: close
+  translation: "Zamknij"
+
+# Delayed Disqus
+- id: show
+  translation: "Pokaż"
+- id: comments
+  translation: "komentarzy" 
+
+# Theme toggle
+- id: themeToggleLabel
+  translation: "Motyw"
+- id: themeTooltipAuto
+  translation: "Auto (zgodnie z systemem)"
+- id: themeTooltipLight
+  translation: "Tryb jasny"
+- id: themeTooltipDark
+  translation: "Tryb ciemny"
+
+# Related posts
+- id: seeAlso
+  translation: "Zobacz też"
+
+# Archive
+- id: all
+  translation: "Wszystkie"
+- id: archiveYearFilter
+  translation: "Filtruj według roku"
+
+# Categories
+- id: categoriesLabel
+  translation: "Kategorie: "
+
+# View source
+- id: viewSource
+  translation: "Pokaż źródło"
+# Recipe / Przepis
+- id: recipePrepTime
+  translation: "Czas przygotowania"
+- id: recipeCookTime
+  translation: "Czas gotowania"
+- id: recipeTotalTime
+  translation: "Łączny czas"
+- id: recipeYield
+  translation: "Porcje"
+- id: recipeCategory
+  translation: "Kategoria"
+- id: recipeCuisine
+  translation: "Kuchnia"
+- id: recipeCalories
+  translation: "Kalorie"
+- id: recipeIngredients
+  translation: "Składniki"
+- id: recipeInstructions
+  translation: "Instrukcje"

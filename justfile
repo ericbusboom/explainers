@@ -1,8 +1,8 @@
 default: serve
 
 # Run the Hugo dev server with drafts and live reload.
-serve:
-    hugo server -D --disableFastRender
+serve PORT="1317":
+    hugo server -D --disableFastRender --port {{PORT}}
 
 # Production build into ./public.
 build:
