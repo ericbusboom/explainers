@@ -37,10 +37,10 @@
     line-height: 1.65;
   }
   .container { max-width: 820px; margin: 0 auto; }
-  h1 { font-size: 26px; font-weight: 500; margin: 0 0 0.5rem; }
-  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0 0 2rem; }
-  h2 { font-size: 18px; font-weight: 600; margin: 2rem 0 0.5rem; }
-  h3 { font-size: 15px; font-weight: 600; margin: 1.25rem 0 0.25rem; color: var(--accent-coral); }
+  h1 { font-size: 28px; font-weight: 500; margin: 0 0 0.5rem; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0 0 1.75rem; }
+  h2 { font-size: 19px; font-weight: 600; margin: 2rem 0 0.5rem; }
+  h3 { font-size: 16px; font-weight: 600; margin: 1.25rem 0 0.25rem; }
   p { margin: 0.5rem 0; }
   .card {
     background: var(--bg-card);
@@ -49,6 +49,44 @@
     padding: 1rem 1.25rem;
     margin: 1rem 0;
   }
+  .case {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .case img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 0.75rem 0;
+    background: white;
+  }
+  .case-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .case-title h2 { margin: 0; }
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+  }
+  .stat .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+  .stat .num { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 0.15rem; }
+  .neg { color: var(--accent-coral); }
+  .pos { color: var(--accent-green); }
   .kicker {
     display: inline-block;
     font-size: 11px;
@@ -57,24 +95,34 @@
     color: var(--accent-blue);
     margin-bottom: 0.25rem;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0.75rem 0 0.25rem;
-    font-size: 14px;
-  }
-  th, td {
-    text-align: left;
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--border);
-    font-variant-numeric: tabular-nums;
-  }
-  th { color: var(--text-secondary); font-weight: 500; }
-  tr:last-child td { border-bottom: none; }
-  .neg { color: var(--accent-coral); }
-  .pos { color: var(--accent-green); }
   ul { padding-left: 1.25rem; }
   li { margin: 0.25rem 0; }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    background: var(--accent-blue);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .cta:hover { opacity: 0.9; }
+  .nb-link {
+    display: inline-block;
+    margin: 0.25rem 0.5rem 0.25rem 0;
+    padding: 0.4rem 0.7rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .nb-link:hover { text-decoration: underline; }
   .footnote { color: var(--text-secondary); font-size: 13px; margin-top: 2rem; }
   .back { display: inline-block; margin-bottom: 1.5rem; color: var(--accent-blue); text-decoration: none; font-size: 14px; }
   .back:hover { text-decoration: underline; }
@@ -85,59 +133,78 @@
   <a class="back" href="../">&larr; All explainers</a>
 
   <h1>The trouble with taxing unrealized capital gains</h1>
-  <p class="subtitle">A short explainer on why an "annual mark-to-market" wealth tax sounds clean on a slide and gets ugly in practice.</p>
+  <p class="subtitle">An annual mark-to-market tax sounds clean on a slide. Two worked simulations — a family farm next to a data-center boom, and a founder whose startup goes from unicorn to zero — show what it does to people who aren't liquid.</p>
 
   <div class="card">
     <span class="kicker">The proposal in one sentence</span>
-    <p>Every year, tax the <em>change in value</em> of an asset — stocks, real estate, a closely held business — even if the owner hasn't sold anything.</p>
+    <p>Every year, tax 20% of the <em>change in value</em> of an asset — stocks, real estate, a closely held business — even if the owner hasn't sold anything.</p>
   </div>
 
-  <h2>Why it's appealing</h2>
-  <p>Capital gains are a huge share of the income of the wealthiest households, and under current law, gains are only taxed when an asset is sold ("realized"). Buy-and-hold investors can defer tax indefinitely, and the "step-up in basis" at death can wipe a lifetime of gains off the ledger. Taxing gains as they accrue closes that gap on paper.</p>
+  <p>Capital gains are a huge share of the income of the wealthiest households, and under current law gains are only taxed when an asset is sold. Buy-and-hold investors can defer indefinitely, and the step-up in basis at death wipes a lifetime of gains off the ledger. Taxing gains as they accrue closes that gap on paper.</p>
+  <p>On paper. In practice, two cases tell the story.</p>
 
-  <h2>Why it breaks down in practice</h2>
+  <!-- ============ FARMER ============ -->
+  <div class="case">
+    <div class="case-title">
+      <h2>Case 1 — The farmer next to a data center</h2>
+    </div>
+    <img src="img/farm_2.png" alt="Bar chart comparing farm cash income to annual unrealized-gains tax. Tax bars dwarf income bars during the boom years." />
+    <p>A family runs a 4,000-acre row-crop operation. The corn pays what corn pays — about $600,000 of net cash income a year. In year 3 a hyperscaler announces a data-center campus 15 miles away. Speculators bid the surrounding farmland from $10,000 to $30,000 an acre over four years.</p>
+    <p>The farm's <em>real</em> activity hasn't changed. But on paper the farm is now worth over $120M, well past a $50M wealth threshold. At a 20% mark-to-market tax on the paper gain, here's what happens:</p>
+    <div class="stats-strip">
+      <div class="stat"><div class="lbl">Annual cash income</div><div class="num pos">$600k</div></div>
+      <div class="stat"><div class="lbl">Worst-year tax bill</div><div class="num neg">$4.0M</div></div>
+      <div class="stat"><div class="lbl">That year, tax ÷ income</div><div class="num neg">6.7×</div></div>
+      <div class="stat"><div class="lbl">16-yr cumulative tax</div><div class="num neg">$18.9M</div></div>
+      <div class="stat"><div class="lbl">16-yr cumulative income</div><div class="num pos">$9.6M</div></div>
+      <div class="stat"><div class="lbl">Acres that must be sold</div><div class="num neg">422 (11%)</div></div>
+    </div>
+    <p><strong>The bad outcome:</strong> there is no way to pay the tax from operations. To stay current the family must sell off acres — probably to the same developer-class buyer who caused the price spike. The policy <em>accelerates</em> the conversion of family farmland into commercial use. And if the data-center plan falls through and land prices drop, prior years' tax is not refunded.</p>
+    <a class="cta" href="farmer/">Explore the farmer scenario with knobs &rarr;</a>
+  </div>
 
-  <h3>1. Liquidity: you owe cash on paper money</h3>
-  <p>If you own $50M of a private company and it doubles to $100M, an annual mark-to-market tax sends you a bill on the $50M paper gain. There is no buyer. There is no dividend. You either:</p>
+  <!-- ============ ENTREPRENEUR ============ -->
+  <div class="case">
+    <div class="case-title">
+      <h2>Case 2 — The founder of a failed startup</h2>
+    </div>
+    <img src="img/ent_3.png" alt="Line chart of cumulative tax paid vs. stake value over time. Cumulative non-refundable tax climbs to $32M while the stake value rises to $160M and then collapses to zero." />
+    <p>A founder owns 40% of her venture-backed startup. She paid roughly nothing for her founder shares. The company raises priced rounds; by year 5 her stake is paper-worth $160M. By year 10 the company has wound down and the stake is worth zero. Throughout, the shares are <em>illiquid</em> — the cap table forbids secondary sales and her actual salary is $250k.</p>
+    <p>Each up-round produces an unrealized "gain" that the tax bill is computed against. Down-rounds produce paper losses, but they aren't refundable: at best they roll forward against future gains that never arrive.</p>
+    <div class="stats-strip">
+      <div class="stat"><div class="lbl">Peak paper stake</div><div class="num">$160M</div></div>
+      <div class="stat"><div class="lbl">Final stake value</div><div class="num neg">$0</div></div>
+      <div class="stat"><div class="lbl">Total cash tax paid</div><div class="num neg">$32M</div></div>
+      <div class="stat"><div class="lbl">Worst-year tax</div><div class="num neg">$16M</div></div>
+      <div class="stat"><div class="lbl">That year, tax ÷ salary</div><div class="num neg">64×</div></div>
+      <div class="stat"><div class="lbl">Net economic outcome</div><div class="num neg">−$32M</div></div>
+    </div>
+    <p><strong>The bad outcome:</strong> she pays tens of millions in real cash on paper money against a stake that ends up worthless. The only way to pay the worst-year bill is a forced partial sale of the company at the current paper mark — which depresses that mark and triggers the same problem for everyone else subject to the tax. The "symmetric" alternative — let the IRS refund losses — is mathematically clean (net tax ≈ $0) but politically untenable: it requires the Treasury to mail multi-million-dollar checks to wealthy households in bust years.</p>
+    <a class="cta" href="entrepreneur/">Explore the entrepreneur scenario with knobs &rarr;</a>
+  </div>
+
+  <h2>Why these aren't edge cases</h2>
+  <p>Both stories follow from the same four mechanical properties of any annual mark-to-market tax:</p>
   <ul>
-    <li>Sell shares — which forces dilution, may not be permitted by the cap table, and is often distressed if everyone subject to the tax sells in the same year;</li>
-    <li>Borrow against the position — which works until valuations dip and the loan is called;</li>
-    <li>Force a partial sale of the company — exactly the outcome the founder is least equipped to weather.</li>
+    <li><strong>Liquidity:</strong> the tax is owed in cash; the gain is on an asset that often cannot be sold.</li>
+    <li><strong>Valuation:</strong> for anything other than public stock, "this year's value" is an appraiser's opinion, not a market price.</li>
+    <li><strong>Asymmetry:</strong> taxing gains without refunding losses is a one-way ratchet; refunding losses turns the Treasury into a co-investor that writes checks during recessions.</li>
+    <li><strong>Constitutional risk:</strong> <em>Moore v. United States</em> (2024) left open whether unrealized gains are "income" within the 16th Amendment. A federal mark-to-market regime faces immediate litigation before it raises a dollar.</li>
   </ul>
 
-  <h3>2. Valuation: the IRS has to price what no market does</h3>
-  <p>For public stocks, daily prices exist. For everything else — private equity, family businesses, farmland, art, partnership interests, founders' equity in pre-IPO companies — there is no observable price. Either the taxpayer hires an appraiser (recurring, expensive, and disputable) or the IRS adopts formulaic rules that systematically over- or under-tax depending on the asset class. Audit volume explodes; so does litigation.</p>
-
-  <h3>3. Symmetry: refunds on the way down</h3>
-  <p>If gains are taxed annually, losses must be deductible annually, or the system is mathematically a one-way ratchet. In a bad year, the Treasury writes very large checks to the wealthiest households — politically untenable, fiscally lumpy, and pro-cyclical (refunds peak exactly when revenue is already collapsing).</p>
-
-  <h3>4. Realization is a constitutional question</h3>
-  <p>The 16th Amendment authorizes taxes on <em>income</em>. Whether an unrealized gain counts as income has been a live question since <em>Eisner v. Macomber</em> (1920) and was reopened in <em>Moore v. United States</em> (2024). The Supreme Court declined to settle the broader question, so any federal mark-to-market regime faces immediate constitutional challenge before it raises a dollar.</p>
-
-  <h3>5. Behavioral response: the base moves</h3>
-  <p>Founders accelerate liquidity events to pre-fund tax bills. Private companies stay private longer to avoid daily marks. Wealthy households relocate to non-taxing jurisdictions. Capital reallocates toward harder-to-value assets where the tax bites least. None of these are tax-evasion fantasies — they are the standard response to any large new tax wedge on a mobile, lumpy base.</p>
-
-  <h2>Worked example</h2>
-  <div class="card">
-    <p>Founder holds 20% of a private company valued at $500M, basis &asymp; $0.</p>
-    <table>
-      <tr><th>Year</th><th>Co. value</th><th>Founder stake</th><th>Annual gain</th><th>Tax @ 25%</th></tr>
-      <tr><td>0</td><td>$500M</td><td>$100M</td><td>&mdash;</td><td>&mdash;</td></tr>
-      <tr><td>1</td><td>$800M</td><td>$160M</td><td class="pos">+$60M</td><td class="neg">$15M owed in cash</td></tr>
-      <tr><td>2</td><td>$600M</td><td>$120M</td><td class="neg">&minus;$40M</td><td class="pos">$10M refund?</td></tr>
-      <tr><td>3</td><td>$300M</td><td>$60M</td><td class="neg">&minus;$60M</td><td class="pos">$15M refund?</td></tr>
-    </table>
-    <p class="footnote">The founder paid $15M of real cash in Year 1 against a gain that no longer exists by Year 3. Either Treasury refunds $25M across Years 2&ndash;3 (writing a check to a wealthy household in a downturn) or the loss is suspended, in which case the tax is a forced loan in good years that may never be repaid.</p>
-  </div>
-
-  <h2>The realistic alternatives</h2>
+  <h2>The cleaner alternatives</h2>
   <ul>
     <li><strong>Close step-up in basis at death.</strong> Tax the embedded gain at the transfer event. Same revenue target, no annual valuation, no liquidity squeeze.</li>
     <li><strong>Tax loans against unrealized assets as constructive realization.</strong> If a household borrows large sums against stock to fund consumption, treat that as a sale of the pledged shares for tax purposes.</li>
-    <li><strong>Mark-to-market only publicly traded securities held by ultra-wealthy households.</strong> Narrow base, observable prices, fewer cliff effects &mdash; still imperfect, but tractable.</li>
+    <li><strong>Mark-to-market only publicly traded securities held by ultra-wealthy households.</strong> Narrow base, observable prices, fewer cliff effects — still imperfect, but tractable.</li>
   </ul>
 
-  <p class="footnote">None of this is an argument that the current system is fair. It's an argument that "tax unrealized gains annually, across all asset classes" is the version of the fix with the worst mechanical properties &mdash; and that the cleaner reforms get most of the revenue with a fraction of the breakage.</p>
+  <h2>The simulations</h2>
+  <p>Both scenarios above are simulations with adjustable inputs. The full code lives in two Jupyter notebooks:</p>
+  <a class="nb-link" href="https://github.com/ericbusboom/explainers/blob/master/content/posts/unrealized-gains-tax/farmer.ipynb" target="_blank" rel="noopener">farmer.ipynb &rarr;</a>
+  <a class="nb-link" href="https://github.com/ericbusboom/explainers/blob/master/content/posts/unrealized-gains-tax/entrepreneur.ipynb" target="_blank" rel="noopener">entrepreneur.ipynb &rarr;</a>
+
+  <p class="footnote">None of this is an argument that the current system is fair. It's an argument that "tax unrealized gains annually, across all asset classes" is the version of the fix with the worst mechanical properties — and that the cleaner reforms get most of the revenue with a fraction of the breakage.</p>
 
 </div>
 </body>

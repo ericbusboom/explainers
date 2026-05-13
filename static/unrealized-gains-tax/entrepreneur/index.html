@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The entrepreneur's tax bill — Unrealized gains tax</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root {
+    --bg-page: #faf9f5;
+    --bg-card: #f1efe8;
+    --bg-surface: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #5f5e5a;
+    --border: rgba(0, 0, 0, 0.12);
+    --accent-blue: #185FA5;
+    --accent-coral: #993C1D;
+    --accent-green: #2f7a3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-page: #1a1a1a;
+      --bg-card: #2a2a2a;
+      --bg-surface: #1f1f1f;
+      --text-primary: #f0f0ec;
+      --text-secondary: #a8a7a3;
+      --border: rgba(255, 255, 255, 0.15);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .container { max-width: 920px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 500; margin: 0 0 0.5rem; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0 0 1.5rem; }
+  h2 { font-size: 18px; font-weight: 600; margin: 2rem 0 0.5rem; }
+  h3 { font-size: 15px; font-weight: 600; margin: 1.25rem 0 0.25rem; color: var(--accent-coral); }
+  p { margin: 0.5rem 0; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .back { display: inline-block; margin-bottom: 1.5rem; color: var(--accent-blue); text-decoration: none; font-size: 14px; }
+  .back:hover { text-decoration: underline; }
+  .knobs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem 1.25rem;
+    margin: 0.5rem 0;
+  }
+  .knob { font-size: 13px; }
+  .knob label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-secondary);
+    margin-bottom: 0.15rem;
+  }
+  .knob label .val { color: var(--text-primary); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .knob input[type=range] { width: 100%; accent-color: var(--accent-blue); }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+  }
+  .stat {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+  }
+  .stat .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+  .stat .num { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 0.15rem; }
+  .stat .num.neg { color: var(--accent-coral); }
+  .stat .num.pos { color: var(--accent-green); }
+  .chart { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem; margin: 1rem 0; }
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 720px) { .chart-grid { grid-template-columns: 1fr; } }
+  .footnote { color: var(--text-secondary); font-size: 13px; margin-top: 1.5rem; }
+  .nb-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 0.8rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .nb-link:hover { text-decoration: underline; }
+  .kicker {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-blue);
+    margin-bottom: 0.25rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="back" href="../">&larr; Unrealized gains tax overview</a>
+
+  <h1>The entrepreneur: paper millionaire, cash bankrupt</h1>
+  <p class="subtitle">A founder owns 40% of a venture-backed startup. Her stake rises through priced rounds to a $400M paper valuation, then the company fails. Under a 20% annual mark-to-market tax, she pays tens of millions of dollars in cash against a stake that ends up worth zero.</p>
+
+  <div class="card">
+    <span class="kicker">Setup</span>
+    <p>The shares are illiquid throughout — the company is private, the cap table prohibits secondary sales, and her annual salary is $250k. Every up-round produces an unrealized "gain" that the tax bill is computed against. Down-rounds and the eventual wind-down produce paper losses, but those losses are not refundable: at best they roll forward against future gains that never arrive.</p>
+  </div>
+
+  <h2>Knobs</h2>
+  <div class="card">
+    <div class="knobs">
+      <div class="knob">
+        <label>Founder ownership <span class="val" id="v_own">40%</span></label>
+        <input type="range" id="own" min="5" max="100" step="1" value="40">
+      </div>
+      <div class="knob">
+        <label>Peak company valuation ($M) <span class="val" id="v_peak">$400M</span></label>
+        <input type="range" id="peak" min="50" max="2000" step="25" value="400">
+      </div>
+      <div class="knob">
+        <label>Years to peak <span class="val" id="v_yup">5</span></label>
+        <input type="range" id="yup" min="2" max="8" step="1" value="5">
+      </div>
+      <div class="knob">
+        <label>Years from peak to zero <span class="val" id="v_ydn">5</span></label>
+        <input type="range" id="ydn" min="2" max="8" step="1" value="5">
+      </div>
+      <div class="knob">
+        <label>Tax rate <span class="val" id="v_rate">20%</span></label>
+        <input type="range" id="rate" min="0" max="40" step="1" value="20">
+      </div>
+      <div class="knob">
+        <label>Annual salary ($k) <span class="val" id="v_sal">$250k</span></label>
+        <input type="range" id="sal" min="0" max="1000" step="25" value="250">
+      </div>
+    </div>
+  </div>
+
+  <h2>Headline numbers</h2>
+  <div class="stats">
+    <div class="stat"><div class="lbl">Peak paper stake</div><div class="num" id="s_peak">$0</div></div>
+    <div class="stat"><div class="lbl">Final stake value</div><div class="num" id="s_final">$0</div></div>
+    <div class="stat"><div class="lbl">Total tax, non-refundable</div><div class="num neg" id="s_taxn">$0</div></div>
+    <div class="stat"><div class="lbl">Total tax, symmetric</div><div class="num" id="s_taxs">$0</div></div>
+    <div class="stat"><div class="lbl">Worst-year tax</div><div class="num neg" id="s_worst">$0</div></div>
+    <div class="stat"><div class="lbl">Worst-year tax ÷ salary</div><div class="num neg" id="s_ratio">0×</div></div>
+  </div>
+
+  <div class="chart" id="ch_stake"></div>
+  <div class="chart-grid">
+    <div class="chart" id="ch_gain"></div>
+    <div class="chart" id="ch_tax"></div>
+  </div>
+  <div class="chart" id="ch_cum"></div>
+
+  <h2>What this means</h2>
+  <ul>
+    <li><strong>The founder pays real cash on paper money.</strong> She cannot sell her shares to pay the tax — the company is private, no buyer exists at scale, and the cap table usually forbids it.</li>
+    <li><strong>The non-refundable regime is brutal on failed founders.</strong> She pays tens of millions over the up years and ends with a worthless stake and a worthless pile of loss carryforwards.</li>
+    <li><strong>The symmetric regime is mathematically clean</strong> — net tax over the cycle is 20% of (final − basis), which is zero for a failed company — but it requires the IRS to send refund checks during bust years to wealthy households. No tax system actually does this.</li>
+    <li><strong>The worst-year tax is many multiples of her salary.</strong> The only way to pay is to force a partial sale of the company at the current paper mark, which depresses the mark and triggers the same problem for everyone else subject to the tax.</li>
+  </ul>
+
+  <a class="nb-link" href="https://github.com/ericbusboom/explainers/blob/master/content/posts/unrealized-gains-tax/entrepreneur.ipynb" target="_blank" rel="noopener">View the source Jupyter notebook on GitHub &rarr;</a>
+
+  <p class="footnote">Knobs are live: drag a slider and the charts and numbers recompute. Defaults are the headline scenario.</p>
+</div>
+
+<script>
+const fmt$ = n => {
+  const sign = n < 0 ? '−$' : '$';
+  const v = Math.abs(n);
+  if (v >= 1e6) return sign + (v/1e6).toFixed(1) + 'M';
+  if (v >= 1e3) return sign + (v/1e3).toFixed(0) + 'k';
+  return sign + Math.round(v).toLocaleString();
+};
+
+function readKnobs() {
+  return {
+    own:  +document.getElementById('own').value / 100,
+    peak: +document.getElementById('peak').value * 1e6,
+    yup:  +document.getElementById('yup').value,
+    ydn:  +document.getElementById('ydn').value,
+    rate: +document.getElementById('rate').value / 100,
+    sal:  +document.getElementById('sal').value * 1e3,
+    basis: 10000,
+  };
+}
+
+function valuationPath(k) {
+  // Exponential rise from ~$1M to peak over yup years, then exponential decay to ~0 over ydn years.
+  const startVal = 1e6;
+  const path = [];
+  const totalYears = k.yup + k.ydn + 1;
+  for (let y = 0; y < totalYears; y++) {
+    if (y <= k.yup) {
+      // exponential interpolation startVal -> peak
+      const t = y / k.yup;
+      path.push(startVal * Math.pow(k.peak / startVal, t));
+    } else {
+      const t = (y - k.yup) / k.ydn;
+      // exponential decay peak -> 0; force exactly 0 at final year
+      if (y === totalYears - 1) path.push(0);
+      else path.push(k.peak * Math.pow(0.001, t));   // 1/1000 per ydn span before clamp
+    }
+  }
+  return path;
+}
+
+function compute(k) {
+  const valuation = valuationPath(k);
+  const stake = valuation.map(v => v * k.own);
+  const years = stake.map((_, i) => i);
+  const prior = [k.basis, ...stake.slice(0, -1)];
+  const gain  = stake.map((v, i) => v - prior[i]);
+
+  // non-refundable with carryforward
+  const taxN = new Array(stake.length).fill(0);
+  let cf = 0;
+  for (let i = 0; i < gain.length; i++) {
+    const g = gain[i];
+    if (g >= 0) {
+      const taxable = Math.max(0, g - cf);
+      cf = Math.max(0, cf - g);
+      taxN[i] = k.rate * taxable;
+    } else {
+      cf += -g;
+      taxN[i] = 0;
+    }
+  }
+  const taxS = gain.map(g => k.rate * g);
+
+  const cumN = []; let s = 0; for (const t of taxN) { s += t; cumN.push(s); }
+  const cumS = []; s = 0; for (const t of taxS) { s += t; cumS.push(s); }
+
+  return { years, valuation, stake, gain, taxN, taxS, cumN, cumS };
+}
+
+const COLOR = {
+  blue:  '#185FA5',
+  coral: '#993C1D',
+  green: '#2f7a3a',
+  orange:'#ff7f0e',
+};
+
+function plotLayout(title, ylabel, height) {
+  return {
+    title: { text: title, font: { size: 14 } },
+    margin: { t: 40, l: 60, r: 20, b: 40 },
+    xaxis: { title: 'Year', gridcolor: 'rgba(128,128,128,0.2)' },
+    yaxis: { title: ylabel, gridcolor: 'rgba(128,128,128,0.2)' },
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { color: getComputedStyle(document.body).color, size: 12 },
+    legend: { orientation: 'h', y: -0.2 },
+    height: height || 320,
+  };
+}
+
+function render() {
+  const k = readKnobs();
+  document.getElementById('v_own').textContent  = Math.round(k.own*100) + '%';
+  document.getElementById('v_peak').textContent = '$' + (k.peak/1e6) + 'M';
+  document.getElementById('v_yup').textContent  = k.yup;
+  document.getElementById('v_ydn').textContent  = k.ydn;
+  document.getElementById('v_rate').textContent = Math.round(k.rate*100) + '%';
+  document.getElementById('v_sal').textContent  = '$' + (k.sal/1e3) + 'k';
+
+  const d = compute(k);
+
+  const peakStake  = Math.max(...d.stake);
+  const finalStake = d.stake[d.stake.length - 1];
+  const totalN     = d.cumN[d.cumN.length - 1];
+  const totalS     = d.cumS[d.cumS.length - 1];
+  const worstIdx   = d.taxN.indexOf(Math.max(...d.taxN));
+  const worstTax   = d.taxN[worstIdx];
+
+  document.getElementById('s_peak').textContent  = fmt$(peakStake);
+  document.getElementById('s_final').textContent = fmt$(finalStake);
+  document.getElementById('s_taxn').textContent  = fmt$(totalN);
+  document.getElementById('s_taxs').textContent  = fmt$(totalS);
+  document.getElementById('s_worst').textContent = fmt$(worstTax);
+  document.getElementById('s_ratio').textContent = k.sal > 0 ? (worstTax/k.sal).toFixed(0) + '×' : '—';
+
+  // chart 1: stake value over time
+  Plotly.react('ch_stake', [{
+    x: d.years, y: d.stake.map(v => v/1e6),
+    type: 'scatter', mode: 'lines+markers',
+    line: { color: COLOR.blue, width: 2 },
+    fill: 'tozeroy', fillcolor: 'rgba(24,95,165,0.15)',
+    name: 'Founder stake',
+  }], { ...plotLayout("Founder's paper stake over time", '$M', 360) },
+    {displayModeBar: false, responsive: true});
+
+  // chart 2: annual gain (red/green bars)
+  Plotly.react('ch_gain', [{
+    x: d.years, y: d.gain.map(v => v/1e6),
+    type: 'bar', name: 'Annual paper gain/loss',
+    marker: { color: d.gain.map(g => g >= 0 ? COLOR.green : COLOR.coral) },
+  }], { ...plotLayout('Annual paper gain/loss on stake', '$M') },
+    {displayModeBar: false, responsive: true});
+
+  // chart 3: tax per regime
+  Plotly.react('ch_tax', [{
+    x: d.years, y: d.taxN.map(v => v/1e6),
+    type: 'bar', name: 'Non-refundable',
+    marker: { color: COLOR.coral },
+  }, {
+    x: d.years, y: d.taxS.map(v => v/1e6),
+    type: 'bar', name: 'Symmetric (refundable)',
+    marker: { color: COLOR.green },
+  }], { ...plotLayout('Annual tax owed by regime', '$M'), barmode: 'group' },
+    {displayModeBar: false, responsive: true});
+
+  // chart 4: cumulative tax vs stake value
+  Plotly.react('ch_cum', [{
+    x: d.years, y: d.cumN.map(v => v/1e6),
+    type: 'scatter', mode: 'lines+markers',
+    line: { color: COLOR.coral, width: 2 },
+    name: 'Cumulative tax (non-refundable)',
+  }, {
+    x: d.years, y: d.cumS.map(v => v/1e6),
+    type: 'scatter', mode: 'lines+markers',
+    line: { color: COLOR.green, width: 2 },
+    name: 'Cumulative tax (symmetric)',
+  }, {
+    x: d.years, y: d.stake.map(v => v/1e6),
+    type: 'scatter', mode: 'lines+markers',
+    line: { color: COLOR.blue, width: 2, dash: 'dash' },
+    name: 'Stake value',
+  }], { ...plotLayout('Cumulative tax paid vs. stake value', '$M', 360) },
+    {displayModeBar: false, responsive: true});
+}
+
+document.querySelectorAll('input[type=range]').forEach(el => el.addEventListener('input', render));
+render();
+</script>
+</body>
+</html>
