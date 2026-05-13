@@ -72,6 +72,37 @@ bust years.
 
 [Walk through the entrepreneur scenario →](/unrealized-gains-tax/entrepreneur/)
 
+## Case 3 — The public-company founder who has to move his own stock
+
+A founder owns 20% of a publicly traded company with a $5B market cap. Over
+one year the company grows to $7B — his paper gain is $400M and the 20% tax
+is $80M. He has no other liquid wealth. To pay the tax he has to sell stock.
+
+That's where the second-order math kicks in. A $5–7B-cap stock typically
+trades about 0.7% of its market cap a day, so daily volume is around $30–50M.
+Pushing $80M of insider supply through a stock like that is roughly **1.6
+days of total volume**, and there is thirty years of empirical work on what
+that does to price. The square-root impact law ([Almgren et al. 2005](https://www.cis.upenn.edu/~mkearns/finread/costestim.pdf))
+plus a modest insider-signaling discount predicts a permanent ~3% price drop
+— which applies not just to the shares he sells, but to the ~19% of the
+company he still holds.
+
+![Stacked bar showing the $80M cash to Treasury, a small $1.9M sale-friction overshoot, and a $37.6M permanent loss on the remaining stake — total economic cost $119.5M against a nominal $80M headline.](public_company_hero.png)
+
+| Cash to Treasury | Sale friction | Permanent loss on remaining stake | **Total cost** | Effective rate on gain |
+|---:|---:|---:|---:|---:|
+| $80.0M | $1.9M | $37.6M | **$119.5M** | **29.9%** (1.5× nominal) |
+
+**The bad outcome:** the headline 20% tax rate ends up being a ~30%
+effective rate on his paper gain, because the forced sale permanently
+lowers the value of the stake he still holds. The permanent price drop is
+also borne by every other shareholder — index funds, pension plans, retail.
+A wealth tax on the founder is, in part, a value transfer from every other
+holder of the same security to the Treasury. And it repeats every year the
+company grows: ownership erodes monotonically.
+
+[Walk through the public-company scenario →](/unrealized-gains-tax/public-company/)
+
 ## Why these aren't edge cases
 
 Both stories follow from the same four mechanical properties of any annual
