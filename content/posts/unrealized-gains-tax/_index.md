@@ -108,10 +108,61 @@ company grows: ownership erodes monotonically.
 
 [Walk through the public-company scenario →](public-company/)
 
+## Case 4 — "Buy, borrow, die": does the loophole really zero out tax?
+
+The cases above were arguments against an *annual mark-to-market* tax. This
+last case is the opposite — an argument that the *existing* tax code already
+catches most of the wealth the unrealized-gains-tax proposal was trying to
+reach, and the popular "buy borrow die zeroes out tax" narrative is wrong
+above the estate-tax exemption.
+
+A 65-year-old wealthy taxpayer with appreciated stock wants to fund a major
+expenditure today. He has three financing paths over the next 25 years (age
+65 → 90): sell stock upfront, borrow and amortize, or borrow-interest-only
+and die with the loan outstanding. The last path is the textbook
+buy-borrow-die: step-up in basis at death wipes out the capital-gains tax
+on the loan-repayment sale. So the strategy "works" in the sense that no
+capital-gains tax is owed.
+
+But total federal tax revenue isn't zero. The estate tax (40% above the
+$30M MFJ exemption) takes a much bigger bite than the avoided capital-gains
+tax would have.
+
+![Stacked-bar chart of federal tax revenue under three financing paths for an ultra-HNW founder. Estate tax (red) is the dominant component in every scenario; total federal revenue is $397M, $430M, $502M for Scenarios A/B/C respectively against a $100M expenditure.](buy_borrow_die_hero.png)
+
+For an ultra-HNW founder ($300M portfolio, $100M expenditure, age 65 → 90):
+
+| Scenario | Borrower CGT | Lender tax | Estate tax | **Total fed** | **Heirs** |
+|---|---:|---:|---:|---:|---:|
+| A. Sell upfront | $21.7M | — | $375.0M | **$396.8M** | **$592.5M** |
+| B. Borrow & amortize | $32.4M | $9.8M | $388.1M | **$430.3M** | **$612.1M** |
+| C. Borrow, die | $36.7M | $41.3M | $424.4M | **$502.3M** | **$666.7M** |
+
+**The bad outcome — for the popular narrative, not the founder.** "Buy
+borrow die" still wins for *heirs* (~12% more than selling upfront, because
+the strategy preserves capital base for 25 years of compounding). But it
+*loses* for the popular tax-avoidance story: the IRS collects **more**
+federal revenue under Scenario C than under A, not less, because the 40%
+estate tax replaces the 23.8% capital-gains tax on a *bigger* compounded
+estate. Total federal revenue runs 3–5× the original expenditure over the
+25-year horizon — almost all of it estate tax.
+
+The targeted reforms are clear and existing-tax-code-compatible:
+**eliminating step-up at death** closes the genuine loophole; **tightening
+the estate-tax exemption** or its valuation games (GRATs, IDGTs, dynasty
+trusts) addresses dynastic-wealth concentration directly. Both have
+substantial leverage; neither requires the mechanical breakage of an
+annual unrealized-gains tax.
+
+[Walk through the buy-borrow-die analysis →](buy-borrow-die/)
+
 ## Why these aren't edge cases
 
-Both stories follow from the same four mechanical properties of any annual
-mark-to-market tax:
+The first three cases follow from the same four mechanical properties of any annual
+mark-to-market tax. The fourth shows that the existing tax code already collects
+substantial revenue from the very households the proposal is supposed to target.
+
+The mechanical problems with an annual mark-to-market tax:
 
 - **Liquidity:** the tax is owed in cash; the gain is on an asset that often
   cannot be sold.
