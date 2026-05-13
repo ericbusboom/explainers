@@ -82,18 +82,23 @@ That's where the second-order math kicks in. A $5–7B-cap stock typically
 trades about 0.7% of its market cap a day, so daily volume is around $30–50M.
 Pushing $80M of insider supply through a stock like that is roughly **1.6
 days of total volume**, and there is thirty years of empirical work on what
-that does to price. The square-root impact law ([Almgren et al. 2005](https://www.cis.upenn.edu/~mkearns/finread/costestim.pdf))
-plus a modest insider-signaling discount predicts a permanent ~3% price drop
-— which applies not just to the shares he sells, but to the ~19% of the
-company he still holds.
+that does to price. Two serious bodies of literature disagree about the
+functional form — [Almgren et al. (2005)](https://www.cis.upenn.edu/~mkearns/finread/costestim.pdf)
+explicitly *reject* the square-root model in favor of a linear permanent /
+3/5 temporary law; [Tóth et al. (2011)](https://arxiv.org/abs/1105.1694)
+derive a square-root law from a latent-order-book model and support it
+empirically. We compute under both. Both predict a permanent price drop in
+the 3–5% range, applied not just to the shares he sells but to the ~19% of
+the company he still holds.
 
-![Stacked bar showing the $80M cash to Treasury, a small $1.9M sale-friction overshoot, and a $37.6M permanent loss on the remaining stake — total economic cost $119.5M against a nominal $80M headline.](public_company_hero.png)
+![Stacked-bar comparison of real economic cost under the Almgren and Tóth impact models, both showing total cost of $128–142M against the nominal $80M headline tax — about 32–36% effective rate on the $400M paper gain.](public_company_hero.png)
 
-| Cash to Treasury | Sale friction | Permanent loss on remaining stake | **Total cost** | Effective rate on gain |
-|---:|---:|---:|---:|---:|
-| $80.0M | $1.9M | $37.6M | **$119.5M** | **29.9%** (1.5× nominal) |
+| Model | Cash to Treasury | Sale friction | Permanent loss on remaining stake | **Total cost** | Effective rate on gain |
+|:---|---:|---:|---:|---:|---:|
+| Almgren (linear perm.) | $80.0M | $1.5M | $60.8M | **$142.3M** | **35.6%** (1.78× nominal) |
+| Tóth (square-root perm.) | $80.0M | $1.0M | $47.1M | **$128.2M** | **32.0%** (1.60× nominal) |
 
-**The bad outcome:** the headline 20% tax rate ends up being a ~30%
+**The bad outcome:** the headline 20% tax rate ends up being a 32–36%
 effective rate on his paper gain, because the forced sale permanently
 lowers the value of the stake he still holds. The permanent price drop is
 also borne by every other shareholder — index funds, pension plans, retail.
