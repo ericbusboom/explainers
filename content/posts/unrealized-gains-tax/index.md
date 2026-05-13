@@ -13,7 +13,8 @@ Capital gains are a huge share of the income of the wealthiest households, and
 under current law gains are only taxed when an asset is sold. Buy-and-hold
 investors can defer indefinitely, and the step-up in basis at death wipes a
 lifetime of gains off the ledger. Taxing gains as they accrue closes that gap
-... on paper. In practice, two cases tell a different story.
+... on paper. In practice, two cases tell a different story, one that turns out
+very badly for people who should not be punished by our tax system. 
 
 ## Case 1 — The farmer next to a data center
 
