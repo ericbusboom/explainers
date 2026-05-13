@@ -9,7 +9,7 @@ DefaultContentLanguage = "en"
   pagerSize = 10
 
 [Params]
-  subtitle = "Short web explainers and back-of-envelope analyses."
+  subtitle = "Short web explainers and back-of-envelope analyses. Largely AI produced, so indicative but not definitive."
   mainSections = ["posts"]
   dateFormat = ":date_long"
   rss = true
