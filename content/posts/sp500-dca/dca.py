@@ -18,12 +18,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 DATA_PATH = Path(__file__).parent / 'historical_returns.csv'
+INCOME_PATH = Path(__file__).parent / 'median_household_income.csv'
 REAL_CONTRIBUTION = 1_000.0
 
 
 def load_returns(path: Path = DATA_PATH) -> pd.DataFrame:
     df = pd.read_csv(path)
     return df.set_index('year')
+
+
+def load_median_hh_income(path: Path = INCOME_PATH) -> pd.Series:
+    """Real median household income, annual, in approximate 2025 dollars.
+
+    Spliced series: FRED MEHOINUSA672N (real median household income, 2023
+    CPI-U-RS dollars) for 1984+; FRED MEFAINUSA672N (real median family
+    income) scaled by HH/Fam ratio at 1984 (~0.848) for 1953–1983; held
+    flat at the 1953 value for 1950–1952. Inflated by ~5.7% to roll forward
+    from 2023 CPI-U-RS to 2025 CPI dollars for headline consistency.
+    """
+    df = pd.read_csv(path)
+    return df.set_index('year')['real_median_hh_income']
 
 
 def final_real_net_worth(returns: pd.DataFrame, start_year: int, n_years: int,
@@ -41,6 +55,44 @@ def final_real_net_worth(returns: pd.DataFrame, start_year: int, n_years: int,
     for k in range(n_years):
         total += contribution * np.prod(1.0 + r[k:])
     return total
+
+
+def final_real_net_worth_variable(returns: pd.DataFrame, contributions: pd.Series,
+                                  start_year: int, n_years: int) -> float:
+    """Like final_real_net_worth, but each year's real contribution comes from
+    `contributions[start_year + k]` (k=0..n_years-1). `contributions` must
+    cover all years in [start_year, start_year + n_years - 1]."""
+    r = returns.loc[start_year:start_year + n_years - 1, 'real_return'].to_numpy()
+    c = contributions.loc[start_year:start_year + n_years - 1].to_numpy()
+    if len(r) != n_years or len(c) != n_years:
+        raise ValueError(
+            f'Missing data for {start_year}+{n_years}: '
+            f'returns={len(r)}, contributions={len(c)}'
+        )
+    total = 0.0
+    for k in range(n_years):
+        total += c[k] * np.prod(1.0 + r[k:])
+    return total
+
+
+def cohort_table_variable(returns: pd.DataFrame, contributions: pd.Series,
+                          start_years, n_years: int) -> pd.DataFrame:
+    """Cohort table for a variable per-year real contribution stream."""
+    rows = []
+    for y in start_years:
+        nw = final_real_net_worth_variable(returns, contributions, y, n_years)
+        total_contrib = float(contributions.loc[y:y + n_years - 1].sum())
+        r = returns.loc[y:y + n_years - 1, 'real_return'].to_numpy()
+        cagr_real = float(np.prod(1.0 + r)) ** (1.0 / n_years) - 1.0
+        rows.append({
+            'start_year': y,
+            'end_year': y + n_years - 1,
+            'total_real_contributed': total_contrib,
+            'final_real_net_worth': nw,
+            'multiple_of_contributed': nw / total_contrib,
+            'real_cagr': cagr_real,
+        })
+    return pd.DataFrame(rows)
 
 
 def cohort_table(returns: pd.DataFrame, start_years, n_years: int,
@@ -88,6 +140,24 @@ def plot_multiple(table: pd.DataFrame, n_years: int, ax=None):
     ax.set_xlabel('Starting year of career')
     ax.set_ylabel('Final real / total real contributed')
     ax.set_title(f'{n_years}-year DCA: real wealth multiple by starting year')
+    ax.legend(loc='upper left')
+    ax.grid(axis='y', alpha=0.3)
+    return ax
+
+
+def plot_cohorts_variable(table: pd.DataFrame, n_years: int, title: str, ax=None):
+    """Bar plot of final real net worth with a second bar showing total real
+    contributed (so the gap above contributions is the real investment gain)."""
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(11, 5))
+    ax.bar(table['start_year'], table['final_real_net_worth'] / 1000,
+           color='steelblue', label='Final real net worth')
+    ax.plot(table['start_year'], table['total_real_contributed'] / 1000,
+            color='black', linewidth=1.5, linestyle='--',
+            label='Total contributed (real, varies by cohort)')
+    ax.set_xlabel('Starting year of career')
+    ax.set_ylabel('Real $ (2025), thousands')
+    ax.set_title(title)
     ax.legend(loc='upper left')
     ax.grid(axis='y', alpha=0.3)
     return ax
