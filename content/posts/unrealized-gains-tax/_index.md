@@ -40,7 +40,7 @@ buyer who caused the price spike. The policy *accelerates* the conversion of
 family farmland into commercial use. And if the data-center plan falls through
 and land prices drop, prior years' tax is not refunded.
 
-[Walk through the farmer scenario →](/unrealized-gains-tax/farmer/)
+[Walk through the farmer scenario →](farmer/)
 
 ## Case 2 — The founder of a failed startup
 
@@ -70,7 +70,7 @@ is mathematically clean (net tax ≈ $0) but politically untenable: it requires
 the Treasury to mail multi-million-dollar checks to wealthy households in
 bust years.
 
-[Walk through the entrepreneur scenario →](/unrealized-gains-tax/entrepreneur/)
+[Walk through the entrepreneur scenario →](entrepreneur/)
 
 ## Case 3 — The public-company founder who has to move his own stock
 
@@ -106,7 +106,7 @@ A wealth tax on the founder is, in part, a value transfer from every other
 holder of the same security to the Treasury. And it repeats every year the
 company grows: ownership erodes monotonically.
 
-[Walk through the public-company scenario →](/unrealized-gains-tax/public-company/)
+[Walk through the public-company scenario →](public-company/)
 
 ## Why these aren't edge cases
 

@@ -1,0 +1,33 @@
+{{ define "main" }}
+  <div role="main" class="container">
+    <div class="row">
+      <div class="col-md-10 offset-md-1">
+        {{ with .Content }}
+          <div class="content-section">
+            {{.}}
+          </div>
+        {{ end }}
+
+        <div class="posts-list">
+          {{ $mainSections := default (slice "post" "posts") site.Params.mainSections }}
+          {{/* Include both regular pages and section index pages (so an explainer
+               organized as a branch bundle with nested detail pages still shows up
+               as a single card here). Hidden via Params.hidden or build.list:never
+               still suppresses the entry. */}}
+          {{/* All pages within mainSections, of kind page or (nested) section.
+               Exclude each top-level section root (e.g. /posts/) so we don't
+               surface "Posts" itself as a card. */}}
+          {{ $candidates := where (where site.Pages "Type" "in" $mainSections) "Kind" "in" (slice "page" "section") }}
+          {{ $candidates = where $candidates "Parent.Kind" "ne" "home" }}
+          {{ $pag := .Paginate (where $candidates "Params.hidden" "!=" true) }}
+          {{ range $pag.Pages }}
+            {{ partial "post_preview" . }}
+          {{ end }}
+        </div>
+
+        {{ partial "paginator.html" . }}
+      </div>
+    </div>
+    {{ partial "toc.html" . }}
+  </div>
+{{ end }}
